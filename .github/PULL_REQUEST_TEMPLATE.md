@@ -24,6 +24,8 @@ Closes #
 - [ ] Я не змінював тестові файли
 - [ ] Я не змінював сигнатури методів
 - [ ] PR створений у гілку `develop`
+- [ ] PR створений як Draft та переведений у Ready for review після проходження тестів
+- [ ] Задача на [Project Board](https://github.com/users/yevhen-kalyna/projects/5) переведена в **In Review**
 
 ## Додаткові коментарі
 

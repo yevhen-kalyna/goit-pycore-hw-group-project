@@ -80,3 +80,33 @@ personal_assistant/
 - Target branch for PRs: `develop` (never `main` directly)
 - Squash merge into develop
 - CI must pass: ruff check + ruff format --check + mypy + pytest
+
+## Project Board (Kanban)
+
+Project board: https://github.com/users/yevhen-kalyna/projects/5
+
+### Status columns
+
+- **Backlog** — depends on other tasks, not yet actionable
+- **Todo** — ready to be picked up
+- **In Progress** — someone is actively working on it
+- **In Review** — PR created, awaiting code review
+- **Done** — merged and closed
+
+### Custom fields
+
+- **Priority**: Critical / High / Medium / Low
+- **Size**: XS / S / M / L / XL (relative effort)
+
+### Workflow
+
+1. Pick a task from **Todo** → move to **In Progress**
+2. Create `feature/<scope>` branch from `develop`
+3. Implement code, make tests pass
+4. Create Draft PR, reference issues with `Closes #N`
+5. Move task to **In Review**
+6. After merge → task auto-moves to **Done**
+
+### WIP limit
+
+Max 1-2 tasks in "In Progress" per person at a time.
