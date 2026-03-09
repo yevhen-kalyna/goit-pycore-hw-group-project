@@ -89,6 +89,20 @@ pytest --tb=short  # скорочений traceback
 
 ## Робочий процес
 
+### 📋 Project Board
+
+Відстеження прогресу — на [Kanban-дошці проєкту](https://github.com/users/yevhen-kalyna/projects/5).
+
+| Колонка | Опис |
+|---------|------|
+| **Backlog** | Задача залежить від інших — ще не можна починати |
+| **Todo** | Готова до виконання — бери в роботу |
+| **In Progress** | Активно працюєш над задачею |
+| **In Review** | PR створений, чекає рев'ю |
+| **Done** | Замержено ✅ |
+
+> Детальніше про роботу з дошкою — див. [CONTRIBUTING.md](.github/CONTRIBUTING.md)
+
 ### Git-стратегія
 
 Проєкт використовує наступну модель гілкування:
@@ -147,11 +161,14 @@ git push origin feature/<scope>
 ### Правила PR
 
 - PR створюється в гілку `develop` (не в `main`)
+- PR створюється як **Draft**, поки тести для feature не проходять (зелені)
+- Коли тести зелені — натисніть **"Ready for review"** на GitHub
 - Заголовок PR — короткий опис змін
 - В описі PR вказати які Issues закриває (напр. `Closes #9, #10`)
 - PR має пройти CI (ruff + mypy + pytest)
 - PR потребує review від Lead
 - Використовується **Squash merge** — один чистий коміт на feature
+- Оновіть задачу на [дошці](https://github.com/users/yevhen-kalyna/projects/5): перетягніть в **In Review**
 
 ### Як запустити тести для своєї задачі
 
