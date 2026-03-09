@@ -1,8 +1,8 @@
-import pytest
 from datetime import date
 
-from personal_assistant.models.fields import Field, Name, Phone, Email, Address, Birthday
+import pytest
 
+from personal_assistant.models.fields import Address, Birthday, Email, Field, Name, Phone
 
 # --- Field ---
 

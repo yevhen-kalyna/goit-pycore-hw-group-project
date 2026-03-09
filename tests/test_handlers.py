@@ -2,34 +2,33 @@ from unittest.mock import patch
 
 import pytest
 
-from personal_assistant.models.address_book import AddressBook
-from personal_assistant.models.note_book import NoteBook
-from personal_assistant.models.record import Record
 from personal_assistant.handlers.contact_handlers import (
-    add_contact,
-    change_contact,
-    show_phone,
-    show_all,
-    add_birthday_handler,
-    show_birthday_handler,
-    birthdays_handler,
-    search_contact,
-    delete_contact,
-    add_email_handler,
     add_address_handler,
+    add_birthday_handler,
+    add_contact,
+    add_email_handler,
+    birthdays_handler,
+    change_contact,
+    delete_contact,
+    search_contact,
+    show_all,
+    show_birthday_handler,
+    show_phone,
 )
 from personal_assistant.handlers.note_handlers import (
     add_note_handler,
-    find_note_handler,
-    edit_note_handler,
-    delete_note_handler,
-    all_notes_handler,
     add_tag_handler,
+    all_notes_handler,
+    delete_note_handler,
+    edit_note_handler,
     find_by_tag_handler,
+    find_note_handler,
     sort_notes_by_tag_handler,
 )
+from personal_assistant.models.address_book import AddressBook
+from personal_assistant.models.note_book import NoteBook
+from personal_assistant.models.record import Record
 from personal_assistant.utils import input_error
-
 
 # ==================== Fixtures ====================
 

@@ -1,9 +1,9 @@
-import pytest
 from datetime import datetime, timedelta
+
+import pytest
 
 from personal_assistant.models.address_book import AddressBook
 from personal_assistant.models.record import Record
-
 
 # --- Fixtures ---
 
@@ -237,9 +237,7 @@ def test_upcoming_birthdays_sunday_shifts_to_monday(book: AddressBook) -> None:
     assert congratulation.weekday() == 0  # Monday
 
 
-def test_upcoming_birthdays_feb29_in_non_leap_year(
-    book: AddressBook, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_upcoming_birthdays_feb29_in_non_leap_year(book: AddressBook, monkeypatch: pytest.MonkeyPatch) -> None:
     """Feb 29 birthday should be treated as March 1 in non-leap years."""
     import personal_assistant.models.address_book as ab_module
 

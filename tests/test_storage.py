@@ -8,7 +8,6 @@ from personal_assistant.models.note_book import NoteBook
 from personal_assistant.models.record import Record
 from personal_assistant.storage import load_data, save_data
 
-
 # --- Fixtures ---
 
 

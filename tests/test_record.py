@@ -4,7 +4,6 @@ import pytest
 
 from personal_assistant.models.record import Record
 
-
 # --- Constructor ---
 
 

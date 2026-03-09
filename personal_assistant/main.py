@@ -1,6 +1,6 @@
-from personal_assistant.models.address_book import AddressBook
-from personal_assistant.models.note_book import NoteBook
-from personal_assistant.storage import load_data, save_data
+from personal_assistant.models.address_book import AddressBook  # noqa: F401
+from personal_assistant.models.note_book import NoteBook  # noqa: F401
+from personal_assistant.storage import load_data, save_data  # noqa: F401
 
 
 def parse_input(user_input: str) -> tuple[str, list[str]]:

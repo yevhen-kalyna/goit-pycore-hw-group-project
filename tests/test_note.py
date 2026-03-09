@@ -2,7 +2,6 @@ from datetime import datetime
 
 from personal_assistant.models.note import Note
 
-
 # --- Constructor ---
 
 
