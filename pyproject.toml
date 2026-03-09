@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "personal-assistant"
 version = "1.0.0"
 description = "Personal assistant CLI for managing contacts and notes"
-license = "MIT"
+license = { file = "LICENSE" }
 requires-python = ">=3.12"
 
 [project.optional-dependencies]
@@ -25,6 +25,9 @@ target-version = "py312"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "W"]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
 
 [tool.mypy]
 python_version = "3.12"
