@@ -96,6 +96,97 @@ pytest --tb=short  # скорочений traceback
 ruff check . && ruff format --check . && mypy personal_assistant/ && pytest
 ```
 
+## Робочий процес
+
+### Git-стратегія
+
+Проєкт використовує наступну модель гілкування:
+
+```
+main (стабільний реліз)
+ └── develop (інтеграційна гілка)
+       ├── feature/fields-and-record
+       ├── feature/address-book-cli
+       └── feature/notes
+```
+
+- `main` — стабільний реліз, тільки через PR із `develop`
+- `develop` — інтеграційна гілка, усі feature-гілки мержаться сюди
+- `feature/<scope>` — робочі гілки для конкретних задач
+
+### Як працювати з задачею
+
+1. Переконатися, що `develop` актуальний:
+
+```bash
+git checkout develop
+git pull origin develop
+```
+
+2. Створити feature-гілку:
+
+```bash
+git checkout -b feature/<scope>
+```
+
+Приклади: `feature/fields-and-record`, `feature/notes`, `feature/address-book-cli`
+
+3. Написати код, щоб тести проходили:
+
+```bash
+pytest tests/test_fields.py -v
+```
+
+4. Перед комітом — запустити всі перевірки:
+
+```bash
+ruff check . && ruff format --check . && mypy personal_assistant/ && pytest
+```
+
+5. Закомітити та запушити:
+
+```bash
+git add <files>
+git commit -m "Implement Phone and Email validation"
+git push origin feature/<scope>
+```
+
+6. Створити Pull Request у `develop` на GitHub
+
+### Правила PR
+
+- PR створюється в гілку `develop` (не в `main`)
+- Заголовок PR — короткий опис змін
+- В описі PR вказати які Issues закриває (напр. `Closes #9, #10`)
+- PR має пройти CI (ruff + mypy + pytest)
+- PR потребує review від Lead
+- Використовується **Squash merge** — один чистий коміт на feature
+
+### Як запустити тести для своєї задачі
+
+```bash
+# Тести для полів
+pytest tests/test_fields.py -v
+
+# Тести для Record
+pytest tests/test_record.py -v
+
+# Тести для AddressBook
+pytest tests/test_address_book.py -v
+
+# Тести для нотаток
+pytest tests/test_note.py tests/test_note_book.py -v
+
+# Тести для storage
+pytest tests/test_storage.py -v
+
+# Тести для handlers
+pytest tests/test_handlers.py -v
+
+# Усі тести
+pytest -v
+```
+
 ## Команди CLI
 
 ### Контакти
