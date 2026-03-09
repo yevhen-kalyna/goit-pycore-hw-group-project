@@ -63,37 +63,28 @@ python -m personal_assistant.main
 
 ## Розробка
 
-### Лінтер
+Усі команди для розробки доступні через `make`:
+
+| Команда | Опис |
+|---------|------|
+| `make check` | Запустити всі перевірки (fix + type-check + test) |
+| `make lint` | Перевірка стилю коду (ruff check + format check) |
+| `make fix` | Автоматичне виправлення стилю та форматування |
+| `make type-check` | Перевірка типів (mypy) |
+| `make test` | Запуск тестів (pytest) |
+
+### Швидкий старт
 
 ```bash
-ruff check .
-ruff format --check .
+# Запустити всі перевірки перед комітом
+make check
 ```
 
-### Форматування
+### Додаткові опції pytest
 
 ```bash
-ruff format .
-```
-
-### Перевірка типів
-
-```bash
-mypy personal_assistant/
-```
-
-### Тести
-
-```bash
-pytest
 pytest -v          # детальний вивід
 pytest --tb=short  # скорочений traceback
-```
-
-### Запуск усіх перевірок
-
-```bash
-ruff check . && ruff format --check . && mypy personal_assistant/ && pytest
 ```
 
 ## Робочий процес
@@ -140,7 +131,7 @@ pytest tests/test_fields.py -v
 4. Перед комітом — запустити всі перевірки:
 
 ```bash
-ruff check . && ruff format --check . && mypy personal_assistant/ && pytest
+make check
 ```
 
 5. Закомітити та запушити:
