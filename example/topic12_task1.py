@@ -76,11 +76,7 @@ class Record:
 
     def __str__(self) -> str:
         phones = "; ".join(p.value for p in self.phones)
-        birthday = (
-            f", birthday: {self.birthday.value.strftime('%d.%m.%Y')}"
-            if self.birthday
-            else ""
-        )
+        birthday = f", birthday: {self.birthday.value.strftime('%d.%m.%Y')}" if self.birthday else ""
         return f"Contact name: {self.name.value}, phones: {phones}{birthday}"
 
 
@@ -109,9 +105,7 @@ class AddressBook(UserDict):
             try:
                 birthday_this_year = record.birthday.value.replace(year=today.year)
             except ValueError:
-                birthday_this_year = record.birthday.value.replace(
-                    year=today.year, month=3, day=1
-                )
+                birthday_this_year = record.birthday.value.replace(year=today.year, month=3, day=1)
 
             if birthday_this_year < today:
                 birthday_this_year = birthday_this_year.replace(year=today.year + 1)
@@ -126,10 +120,12 @@ class AddressBook(UserDict):
                 elif congratulation_date.weekday() == 6:
                     congratulation_date += timedelta(days=1)
 
-                upcoming.append({
-                    "name": record.name.value,
-                    "congratulation_date": congratulation_date.strftime("%d.%m.%Y"),
-                })
+                upcoming.append(
+                    {
+                        "name": record.name.value,
+                        "congratulation_date": congratulation_date.strftime("%d.%m.%Y"),
+                    }
+                )
 
         return upcoming
 
@@ -216,9 +212,7 @@ def birthdays(book: AddressBook) -> str:
     upcoming = book.get_upcoming_birthdays()
     if not upcoming:
         return "No upcoming birthdays."
-    return "\n".join(
-        f"{entry['name']}: {entry['congratulation_date']}" for entry in upcoming
-    )
+    return "\n".join(f"{entry['name']}: {entry['congratulation_date']}" for entry in upcoming)
 
 
 def parse_input(user_input: str) -> tuple[str, list[str]]:
