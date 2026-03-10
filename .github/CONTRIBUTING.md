@@ -21,7 +21,7 @@
 pytest tests/test_fields.py -v
 ```
 
-Тести мають показувати `FAILED` (NotImplementedError) до вашої імплементації та `PASSED` після.
+Тести для незреалізованих модулів показують `XFAIL` (expected failure) завдяки auto-xfail хуку в `tests/conftest.py`. Після вашої імплементації вони автоматично стають `PASSED` — жодних маркерів додавати/видаляти не потрібно.
 
 ## Робота з Project Board (Kanban)
 
@@ -99,7 +99,7 @@ git checkout -b feature/fields-and-record
 ruff check .                  # лінтер
 ruff format --check .         # перевірка форматування
 mypy personal_assistant/      # перевірка типів
-pytest                        # тести
+pytest -v --tb=short          # тести (xfail для незреалізованих)
 ```
 
 Якщо `ruff format` скаржиться — виправте форматування:

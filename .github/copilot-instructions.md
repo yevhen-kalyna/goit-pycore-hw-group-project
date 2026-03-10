@@ -59,6 +59,7 @@ personal_assistant/
 - Do NOT change method signatures (parameter types and return types)
 - Replace `raise NotImplementedError` with real logic
 - Run `pytest tests/<relevant_file>.py -v` to check progress
+- `tests/conftest.py` auto-xfails tests that hit `NotImplementedError` — CI stays green for unimplemented stubs
 
 ## Validation Rules
 
@@ -79,7 +80,8 @@ personal_assistant/
 - Branch naming: `feature/<scope>` (e.g., `feature/fields-and-record`)
 - Target branch for PRs: `develop` (never `main` directly)
 - Squash merge into develop
-- CI must pass: ruff check + ruff format --check + mypy + pytest
+- CI has two jobs: lint (ruff + mypy) → tests (7 per-module steps)
+- CI must pass for PR to be merged
 
 ## Project Board (Kanban)
 

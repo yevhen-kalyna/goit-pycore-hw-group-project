@@ -87,6 +87,14 @@ pytest -v          # детальний вивід
 pytest --tb=short  # скорочений traceback
 ```
 
+### Auto-xfail для незреалізованих модулів
+
+`tests/conftest.py` містить pytest-хук, який автоматично позначає тести як **xfail** (expected failure), якщо вони потрапляють на `NotImplementedError` у заглушках. Це означає:
+
+- Реалізований код → тести показують `PASSED`
+- Заглушки → тести показують `XFAIL` (жовті), а не `FAILED` (червоні)
+- CI залишається зеленим, доки реалізований код працює коректно
+
 ## Робочий процес
 
 ### 📋 Project Board
@@ -165,7 +173,7 @@ git push origin feature/<scope>
 - Коли тести зелені — натисніть **"Ready for review"** на GitHub
 - Заголовок PR — короткий опис змін
 - В описі PR вказати які Issues закриває (напр. `Closes #9, #10`)
-- PR має пройти CI (ruff + mypy + pytest)
+- PR має пройти CI (lint: ruff + mypy → tests: 7 модулів окремо)
 - PR потребує review від Lead
 - Використовується **Squash merge** — один чистий коміт на feature
 - Оновіть задачу на [дошці](https://github.com/users/yevhen-kalyna/projects/5): перетягніть в **In Review**
@@ -253,6 +261,15 @@ personal_assistant/
     ├── __init__.py
     ├── contact_handlers.py
     └── note_handlers.py
+tests/
+├── conftest.py             # Auto-xfail хук для NotImplementedError
+├── test_fields.py
+├── test_record.py
+├── test_address_book.py
+├── test_note.py
+├── test_note_book.py
+├── test_storage.py
+└── test_handlers.py
 ```
 
 ## Ліцензія
