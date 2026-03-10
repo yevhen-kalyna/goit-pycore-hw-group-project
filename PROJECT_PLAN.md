@@ -22,6 +22,7 @@ goit-pycore-hw-group-project/
 │   └── utils.py              # Декоратор input_error, допоміжне
 ├── tests/
 │   ├── __init__.py
+│   ├── conftest.py         # Auto-xfail хук для NotImplementedError
 │   ├── test_fields.py
 │   ├── test_record.py
 │   ├── test_address_book.py
@@ -42,15 +43,29 @@ goit-pycore-hw-group-project/
 
 ## CI Pipeline (GitHub Actions)
 
-Файл `.github/workflows/ci.yml` запускається на кожен push та PR у `develop` і `main`:
+Файл `.github/workflows/ci.yml` запускається на кожен push та PR у `develop` і `main`.
 
+### Два jobs:
+
+**Job 1: Lint & Type Check**
 ```
-Ruff (linter + formatter check)
-  → mypy (статична типізація)
-    → pytest (юніт-тести)
+Ruff check → Ruff format --check → mypy
 ```
 
-Конфігурація у `pyproject.toml`:
+**Job 2: Tests** (запускається після lint)
+```
+Tests: fields (27) → Tests: record (29) → Tests: note (11) →
+Tests: note_book (19) → Tests: address_book (22) → Tests: handlers (39) →
+Tests: storage (15)
+```
+
+Кожен модуль — окремий collapsible крок у GitHub Actions UI. Усі кроки виконуються навіть якщо попередній впав (`if: always()`).
+
+### Auto-xfail
+
+`tests/conftest.py` містить pytest-хук, який автоматично конвертує `NotImplementedError` (заглушки) у `xfail`. CI залишається зеленим, доки реалізований код працює коректно.
+
+### Конфігурація у `pyproject.toml`:
 
 ```toml
 [tool.ruff]
