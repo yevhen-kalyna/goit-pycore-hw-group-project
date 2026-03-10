@@ -52,14 +52,17 @@ goit-pycore-hw-group-project/
 Ruff check → Ruff format --check → mypy
 ```
 
-**Job 2: Tests** (запускається після lint)
+**Job 2: Tests** (matrix, запускається після lint)
 ```
-Tests: fields (27) → Tests: record (29) → Tests: note (11) →
-Tests: note_book (19) → Tests: address_book (22) → Tests: handlers (39) →
-Tests: storage (15)
+Tests: fields | Tests: record | Tests: note | Tests: note_book |
+Tests: address_book | Tests: handlers | Tests: storage
 ```
 
-Кожен модуль — окремий collapsible крок у GitHub Actions UI. Усі кроки виконуються навіть якщо попередній впав (`if: always()`).
+Кожен модуль — окремий matrix-job у GitHub Actions UI зі своїм статус-бейджем. Завдяки `fail-fast: false` інші модулі продовжують виконуватися, навіть якщо один із них впав; однак якщо впаде lint-job, тести не стартують.
+
+**Job 3: Test Summary** (запускається після всіх тестів, тільки для PR)
+
+Генерує таблицю з результатами тестів і постить/оновлює коментар у PR.
 
 ### Auto-xfail
 

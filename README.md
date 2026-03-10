@@ -173,7 +173,7 @@ git push origin feature/<scope>
 - Коли тести зелені — натисніть **"Ready for review"** на GitHub
 - Заголовок PR — короткий опис змін
 - В описі PR вказати які Issues закриває (напр. `Closes #9, #10`)
-- PR має пройти CI (lint: ruff + mypy → tests: 7 модулів окремо)
+- PR має пройти CI (lint: ruff check + ruff format --check + mypy → tests: 7 модулів окремо)
 - PR потребує review від Lead
 - Використовується **Squash merge** — один чистий коміт на feature
 - Оновіть задачу на [дошці](https://github.com/users/yevhen-kalyna/projects/5): перетягніть в **In Review**
@@ -245,31 +245,32 @@ pytest -v
 ## Структура проєкту
 
 ```
-personal_assistant/
-├── __init__.py
-├── main.py
-├── storage.py
-├── utils.py
-├── models/
+goit-pycore-hw-group-project/
+├── personal_assistant/
 │   ├── __init__.py
-│   ├── fields.py
-│   ├── record.py
-│   ├── address_book.py
-│   ├── note.py
-│   └── note_book.py
-└── handlers/
-    ├── __init__.py
-    ├── contact_handlers.py
-    └── note_handlers.py
-tests/
-├── conftest.py             # Auto-xfail хук для NotImplementedError
-├── test_fields.py
-├── test_record.py
-├── test_address_book.py
-├── test_note.py
-├── test_note_book.py
-├── test_storage.py
-└── test_handlers.py
+│   ├── main.py
+│   ├── storage.py
+│   ├── utils.py
+│   ├── models/
+│   │   ├── __init__.py
+│   │   ├── fields.py
+│   │   ├── record.py
+│   │   ├── address_book.py
+│   │   ├── note.py
+│   │   └── note_book.py
+│   └── handlers/
+│       ├── __init__.py
+│       ├── contact_handlers.py
+│       └── note_handlers.py
+└── tests/
+    ├── conftest.py          # Auto-xfail хук для NotImplementedError
+    ├── test_fields.py
+    ├── test_record.py
+    ├── test_address_book.py
+    ├── test_note.py
+    ├── test_note_book.py
+    ├── test_storage.py
+    └── test_handlers.py
 ```
 
 ## Ліцензія
