@@ -8,6 +8,7 @@ on:
 
 permissions:
   pull-requests: write
+  issues: write
 
 jobs:
   lint:
@@ -42,19 +43,19 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: "fields (27)"
+          - name: fields
             file: tests/test_fields.py
-          - name: "record (29)"
+          - name: record
             file: tests/test_record.py
-          - name: "note (11)"
+          - name: note
             file: tests/test_note.py
-          - name: "note_book (19)"
+          - name: note_book
             file: tests/test_note_book.py
-          - name: "address_book (22)"
+          - name: address_book
             file: tests/test_address_book.py
-          - name: "handlers (39)"
+          - name: handlers
             file: tests/test_handlers.py
-          - name: "storage (15)"
+          - name: storage
             file: tests/test_storage.py
 
     steps:

@@ -80,7 +80,7 @@ personal_assistant/
 - Branch naming: `feature/<scope>` (e.g., `feature/fields-and-record`)
 - Target branch for PRs: `develop` (never `main` directly)
 - Squash merge into develop
-- CI has two jobs: lint (ruff + mypy) → tests (7 per-module steps)
+- CI has two jobs: lint (ruff check + ruff format --check + mypy) → tests (7 per-module matrix jobs)
 - CI must pass for PR to be merged
 
 ## Project Board (Kanban)

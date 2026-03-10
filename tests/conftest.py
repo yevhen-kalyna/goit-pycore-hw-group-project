@@ -20,9 +20,9 @@ if TYPE_CHECKING:
 def pytest_runtest_makereport(
     item: pytest.Item,  # noqa: ARG001
     call: pytest.CallInfo[None],
-) -> Generator[None, None, None]:
+) -> Generator[None, Result[pytest.TestReport], None]:
     """Convert NotImplementedError failures into xfail results."""
-    outcome: Result[pytest.TestReport] = yield  # type: ignore[assignment]
+    outcome: Result[pytest.TestReport] = yield
     report = outcome.get_result()
 
     if call.when in ("setup", "call") and report.failed:
