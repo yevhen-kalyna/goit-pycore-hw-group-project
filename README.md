@@ -95,6 +95,13 @@ pytest --tb=short  # скорочений traceback
 - Заглушки → тести показують `XFAIL` (жовті), а не `FAILED` (червоні)
 - CI залишається зеленим, доки реалізований код працює коректно
 
+### AI-асистенти
+
+Проєкт містить інструкції для AI-асистентів:
+
+- [`AGENTS.md`](AGENTS.md) — контекст для Claude Code (архітектура, стиль коду, TDD-правила)
+- [`.github/copilot-instructions.md`](.github/copilot-instructions.md) — контекст для GitHub Copilot
+
 ## Робочий процес
 
 ### 📋 Project Board
