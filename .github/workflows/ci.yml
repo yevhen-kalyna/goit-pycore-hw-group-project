@@ -71,8 +71,15 @@ jobs:
           pytest "${{ matrix.file }}" -v --tb=short 2>&1 | tee test-output.txt
           code=${PIPESTATUS[0]}
           set -e
-          if grep -qE '[0-9]+ xfailed' test-output.txt; then
-            count=$(grep -oE '[0-9]+ xfailed' test-output.txt | grep -oE '^[0-9]+')
-            echo "::warning::${{ matrix.file }}: ${count} test(s) not yet implemented (xfail)"
+          summary=$(tail -1 test-output.txt)
+          if echo "$summary" | grep -qE '[0-9]+ xfailed'; then
+            xfail=$(echo "$summary" | grep -oE '[0-9]+ xfailed' | grep -oE '^[0-9]+')
+            passed=$(echo "$summary" | grep -oE '[0-9]+ passed' | grep -oE '^[0-9]+' || echo "0")
+            echo "### ⚠️ ${{ matrix.name }}" >> "$GITHUB_STEP_SUMMARY"
+            echo "${passed} passed, **${xfail} not yet implemented** (xfail)" >> "$GITHUB_STEP_SUMMARY"
+          else
+            passed=$(echo "$summary" | grep -oE '[0-9]+ passed' | grep -oE '^[0-9]+' || echo "0")
+            echo "### ✅ ${{ matrix.name }}" >> "$GITHUB_STEP_SUMMARY"
+            echo "${passed} passed" >> "$GITHUB_STEP_SUMMARY"
           fi
           exit "$code"
