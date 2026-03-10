@@ -44,7 +44,4 @@ class Record:
         birthday = str(self.birthday) if self.birthday else "—"
         email = str(self.email) if self.email else "—"
         address = str(self.address) if self.address else "—"
-        return (
-            f"Name: {self.name} | Phones: {phones} | Birthday: {birthday} | "
-            f"Email: {email} | Address: {address}"
-        )
+        return f"Name: {self.name} | Phones: {phones} | Birthday: {birthday} | Email: {email} | Address: {address}"
