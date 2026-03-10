@@ -7,8 +7,8 @@ on:
     branches: [develop, main]
 
 jobs:
-  lint-type-test:
-    name: Ruff / mypy / pytest
+  lint:
+    name: Lint & Type Check
     runs-on: ubuntu-latest
 
     steps:
@@ -31,5 +31,54 @@ jobs:
       - name: mypy
         run: mypy personal_assistant/
 
-      - name: pytest
-        run: pytest
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    needs: lint
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        id: install
+        run: pip install -e ".[dev]"
+
+      - name: "Tests: fields (27)"
+        if: always() && steps.install.outcome == 'success'
+        id: test-fields
+        run: pytest tests/test_fields.py -v --tb=short
+
+      - name: "Tests: record (29)"
+        if: always() && steps.install.outcome == 'success'
+        id: test-record
+        run: pytest tests/test_record.py -v --tb=short
+
+      - name: "Tests: note (11)"
+        if: always() && steps.install.outcome == 'success'
+        id: test-note
+        run: pytest tests/test_note.py -v --tb=short
+
+      - name: "Tests: note_book (19)"
+        if: always() && steps.install.outcome == 'success'
+        id: test-note-book
+        run: pytest tests/test_note_book.py -v --tb=short
+
+      - name: "Tests: address_book (22)"
+        if: always() && steps.install.outcome == 'success'
+        id: test-address-book
+        run: pytest tests/test_address_book.py -v --tb=short
+
+      - name: "Tests: handlers (39)"
+        if: always() && steps.install.outcome == 'success'
+        id: test-handlers
+        run: pytest tests/test_handlers.py -v --tb=short
+
+      - name: "Tests: storage (15)"
+        if: always() && steps.install.outcome == 'success'
+        id: test-storage
+        run: pytest tests/test_storage.py -v --tb=short
