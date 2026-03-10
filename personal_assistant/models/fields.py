@@ -29,9 +29,7 @@ class Email(Field):
     """Клас для зберігання email з валідацією."""
 
     def __init__(self, value: str) -> None:
-        if not re.fullmatch(r"[a-zA-Z0-9.+_-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}", value):
-            raise ValueError(f"Invalid email address: '{value}'")
-        super().__init__(value)
+        raise NotImplementedError
 
 
 class Address(Field):
