@@ -73,6 +73,6 @@ jobs:
           set -e
           if grep -qE '[0-9]+ xfailed' test-output.txt; then
             count=$(grep -oE '[0-9]+ xfailed' test-output.txt | grep -oE '^[0-9]+')
-            echo "::warning file=${{ matrix.file }}::${count} test(s) not yet implemented (xfail)"
+            echo "::warning::${{ matrix.file }}: ${count} test(s) not yet implemented (xfail)"
           fi
           exit "$code"
