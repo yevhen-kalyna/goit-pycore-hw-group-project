@@ -7,22 +7,29 @@ class NoteBook(UserDict[str, Note]):
     """Клас для зберігання та керування нотатками."""
 
     def add_note(self, note: Note) -> None:
-        raise NotImplementedError
+        self.data[note.id] = note
 
     def find(self, note_id: str) -> Note | None:
-        raise NotImplementedError
+        return self.data.get(note_id)
 
     def delete(self, note_id: str) -> None:
-        raise NotImplementedError
+        self.data.pop(note_id, None)
 
     def edit_note(self, note_id: str, new_body: str) -> None:
-        raise NotImplementedError
+        note = self.find(note_id)
+        if note is None:
+            raise KeyError(note_id)
+        note.body = new_body
 
     def find_by_text(self, query: str) -> list[Note]:
-        raise NotImplementedError
+        query_lower = query.casefold()
+        return [note for note in self.data.values() if query_lower in f"{note.title} {note.body}".casefold()]
 
     def find_by_tag(self, tag: str) -> list[Note]:
-        raise NotImplementedError
+        return [note for note in self.data.values() if tag in note.tags]
 
     def sort_by_tags(self) -> list[Note]:
-        raise NotImplementedError
+        return sorted(
+            self.data.values(),
+            key=lambda note: (not note.tags, note.tags[0].lower() if note.tags else ""),
+        )
