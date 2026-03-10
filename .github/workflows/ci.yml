@@ -32,9 +32,27 @@ jobs:
         run: mypy personal_assistant/
 
   test:
-    name: Tests
+    name: "Tests: ${{ matrix.name }}"
     runs-on: ubuntu-latest
     needs: lint
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: "fields (27)"
+            file: tests/test_fields.py
+          - name: "record (29)"
+            file: tests/test_record.py
+          - name: "note (11)"
+            file: tests/test_note.py
+          - name: "note_book (19)"
+            file: tests/test_note_book.py
+          - name: "address_book (22)"
+            file: tests/test_address_book.py
+          - name: "handlers (39)"
+            file: tests/test_handlers.py
+          - name: "storage (15)"
+            file: tests/test_storage.py
 
     steps:
       - uses: actions/checkout@v4
@@ -45,40 +63,16 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        id: install
         run: pip install -e ".[dev]"
 
-      - name: "Tests: fields (27)"
-        if: always() && steps.install.outcome == 'success'
-        id: test-fields
-        run: pytest tests/test_fields.py -v --tb=short
-
-      - name: "Tests: record (29)"
-        if: always() && steps.install.outcome == 'success'
-        id: test-record
-        run: pytest tests/test_record.py -v --tb=short
-
-      - name: "Tests: note (11)"
-        if: always() && steps.install.outcome == 'success'
-        id: test-note
-        run: pytest tests/test_note.py -v --tb=short
-
-      - name: "Tests: note_book (19)"
-        if: always() && steps.install.outcome == 'success'
-        id: test-note-book
-        run: pytest tests/test_note_book.py -v --tb=short
-
-      - name: "Tests: address_book (22)"
-        if: always() && steps.install.outcome == 'success'
-        id: test-address-book
-        run: pytest tests/test_address_book.py -v --tb=short
-
-      - name: "Tests: handlers (39)"
-        if: always() && steps.install.outcome == 'success'
-        id: test-handlers
-        run: pytest tests/test_handlers.py -v --tb=short
-
-      - name: "Tests: storage (15)"
-        if: always() && steps.install.outcome == 'success'
-        id: test-storage
-        run: pytest tests/test_storage.py -v --tb=short
+      - name: Run tests
+        run: |
+          set +e
+          pytest "${{ matrix.file }}" -v --tb=short 2>&1 | tee test-output.txt
+          code=${PIPESTATUS[0]}
+          set -e
+          if grep -qE '[0-9]+ xfailed' test-output.txt; then
+            count=$(grep -oE '[0-9]+ xfailed' test-output.txt | grep -oE '^[0-9]+')
+            echo "::warning file=${{ matrix.file }}::${count} test(s) not yet implemented (xfail)"
+          fi
+          exit "$code"
