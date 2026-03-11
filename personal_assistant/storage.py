@@ -21,7 +21,7 @@ def load_data(filename: str = "assistant_data.pkl") -> tuple[AddressBook, NoteBo
     try:
         with open(path, "rb") as file:
             data = pickle.load(file)
-    except(OSError, EOFError,pickle.UnpicklingError):
+    except (OSError, EOFError, pickle.UnpicklingError):
         return AddressBook(), NoteBook()
 
     loaded_book = data.get("book") if isinstance(data, dict) else None
