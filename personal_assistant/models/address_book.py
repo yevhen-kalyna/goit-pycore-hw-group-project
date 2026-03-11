@@ -4,7 +4,6 @@ from datetime import date, datetime, timedelta
 from personal_assistant.models.record import Record
 
 
-
 class AddressBook(UserDict[str, Record]):
     """Клас для зберігання та керування записами контактів."""
 
