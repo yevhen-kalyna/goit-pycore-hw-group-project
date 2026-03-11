@@ -1,9 +1,8 @@
 from collections import UserDict
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 
 from personal_assistant.models.record import Record
 
-datetime = __import__("datetime").datetime
 
 
 class AddressBook(UserDict[str, Record]):
