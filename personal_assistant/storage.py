@@ -18,8 +18,11 @@ def load_data(filename: str = "assistant_data.pkl") -> tuple[AddressBook, NoteBo
     if not path.exists():
         return AddressBook(), NoteBook()
 
-    with open(path, "rb") as file:
-        data = pickle.load(file)
+    try:
+        with open(path, "rb") as file:
+            data = pickle.load(file)
+    except(OSError, EOFError,pickle.UnpicklingError):
+        return AddressBook(), NoteBook()
 
     loaded_book = data.get("book") if isinstance(data, dict) else None
     loaded_notebook = data.get("notebook") if isinstance(data, dict) else None
