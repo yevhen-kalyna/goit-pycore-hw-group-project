@@ -22,6 +22,7 @@ goit-pycore-hw-group-project/
 │   └── utils.py              # Декоратор input_error, допоміжне
 ├── tests/
 │   ├── __init__.py
+│   ├── conftest.py         # Auto-xfail хук для NotImplementedError
 │   ├── test_fields.py
 │   ├── test_record.py
 │   ├── test_address_book.py
@@ -42,15 +43,32 @@ goit-pycore-hw-group-project/
 
 ## CI Pipeline (GitHub Actions)
 
-Файл `.github/workflows/ci.yml` запускається на кожен push та PR у `develop` і `main`:
+Файл `.github/workflows/ci.yml` запускається на кожен push та PR у `develop` і `main`.
 
+### Два jobs:
+
+**Job 1: Lint & Type Check**
 ```
-Ruff (linter + formatter check)
-  → mypy (статична типізація)
-    → pytest (юніт-тести)
+Ruff check → Ruff format --check → mypy
 ```
 
-Конфігурація у `pyproject.toml`:
+**Job 2: Tests** (matrix, запускається після lint)
+```
+Tests: fields | Tests: record | Tests: note | Tests: note_book |
+Tests: address_book | Tests: handlers | Tests: storage
+```
+
+Кожен модуль — окремий matrix-job у GitHub Actions UI зі своїм статус-бейджем. Завдяки `fail-fast: false` інші модулі продовжують виконуватися, навіть якщо один із них впав; однак якщо впаде lint-job, тести не стартують.
+
+**Job 3: Test Summary** (запускається після всіх тестів, тільки для PR)
+
+Генерує таблицю з результатами тестів і постить/оновлює коментар у PR.
+
+### Auto-xfail
+
+`tests/conftest.py` містить pytest-хук, який автоматично конвертує `NotImplementedError` (заглушки) у `xfail`. CI залишається зеленим, доки реалізований код працює коректно.
+
+### Конфігурація у `pyproject.toml`:
 
 ```toml
 [tool.ruff]
