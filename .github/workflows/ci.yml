@@ -57,6 +57,8 @@ jobs:
             file: tests/test_handlers.py
           - name: storage
             file: tests/test_storage.py
+          - name: e2e
+            file: tests/test_e2e.py
 
     steps:
       - uses: actions/checkout@v4
@@ -111,7 +113,7 @@ jobs:
 
           for file in tests/test_fields.py tests/test_record.py tests/test_note.py \
                       tests/test_note_book.py tests/test_address_book.py \
-                      tests/test_handlers.py tests/test_storage.py; do
+                      tests/test_handlers.py tests/test_storage.py tests/test_e2e.py; do
 
             module=$(basename "$file" .py | sed 's/^test_//')
             result=$(pytest "$file" --tb=no -q 2>&1 | tail -1)
