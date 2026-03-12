@@ -48,7 +48,7 @@ def show_phone(args: list[str], book: AddressBook) -> str:
     if record is None:
         raise KeyError(name)
 
-    return ", ".join(phone.value for phone in record.phones)
+    return "; ".join(phone.value for phone in record.phones)
 
 
 @input_error
