@@ -35,30 +35,49 @@ def parse_input(user_input: str) -> tuple[str, list[str]]:
 
 
 def _help_text() -> str:
+    contacts = [
+        ("add <name> <phone>", "Додає контакт або телефон до існуючого"),
+        ("change <name> <old> <new>", "Змінює телефон контакту"),
+        ("phone <name>", "Показує телефони контакту"),
+        ("all", "Показує всі контакти"),
+        ("delete-contact <name>", "Видаляє контакт"),
+        ("add-birthday <name> <DD.MM.YYYY>", "Додає день народження"),
+        ("show-birthday <name>", "Показує день народження"),
+        ("birthdays [days]", "Найближчі дні народження (за замовч. 7 днів)"),
+        ("add-email <name> <email>", "Додає email контакту"),
+        ("add-address <name> <address>", "Додає адресу контакту"),
+        ("search <query>", "Пошук контактів за ім'ям/телефоном/email"),
+    ]
+    notes = [
+        ("add-note <title>", "Додає нову нотатку"),
+        ("all-notes", "Показує всі нотатки"),
+        ("delete-note <note_id>", "Видаляє нотатку"),
+        ("edit-note <note_id>", "Редагує нотатку"),
+        ("add-tag <note_id> <tag>", "Додає тег до нотатки"),
+        ("find-note <query>", "Пошук нотаток за текстом"),
+        ("find-by-tag <tag>", "Пошук нотаток за тегом"),
+        ("sort-notes", "Сортує нотатки за тегами"),
+    ]
+    general = [
+        ("hello", "Привітання"),
+        ("help", "Показує цю довідку"),
+        ("close | exit", "Вихід з програми"),
+    ]
+
+    all_rows = contacts + notes + general
+    col_width = max(len(cmd) for cmd, _ in all_rows) + 2
+
+    def format_section(title: str, rows: list[tuple[str, str]]) -> str:
+        lines = [f"\n{title}:"]
+        for cmd, desc in rows:
+            lines.append(f"  {cmd:<{col_width}}{desc}")
+        return "\n".join(lines)
+
     return (
-        "Available commands:\n"
-        "  hello\n"
-        "  add <name> <phone>\n"
-        "  change <name> <old_phone> <new_phone>\n"
-        "  phone <name>\n"
-        "  all\n"
-        "  delete-contact <name>\n"
-        "  add-birthday <name> <dd.mm.yyyy>\n"
-        "  show-birthday <name>\n"
-        "  birthdays [days]\n"
-        "  add-email <name> <email>\n"
-        "  add-address <name> <address>\n"
-        "  search <query>\n"
-        "  add-note <title>\n"
-        "  all-notes\n"
-        "  delete-note <note_id>\n"
-        "  edit-note <note_id>\n"
-        "  add-tag <note_id> <tag>\n"
-        "  find-note <query>\n"
-        "  find-by-tag <tag>\n"
-        "  sort-notes | sort-notes-by-tag\n"
-        "  help\n"
-        "  close | exit"
+        "Available commands:"
+        + format_section("Контакти", contacts)
+        + format_section("Нотатки", notes)
+        + format_section("Загальні", general)
     )
 
 
