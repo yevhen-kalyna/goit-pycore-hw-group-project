@@ -15,7 +15,10 @@ def add_note_handler(args: list[str], notebook: NoteBook) -> str:
     if not args:
         raise IndexError
     title = args[0]
-    body = input("Enter note body: ")
+    try:
+        body = input("Enter note body: ")
+    except EOFError:
+        return "Note creation cancelled."
     note = Note(title, body)
     notebook.add_note(note)
     return "Note added."
@@ -42,7 +45,10 @@ def edit_note_handler(args: list[str], notebook: NoteBook) -> str:
     note = notebook.find(note_id)
     if note is None:
         return _NOTE_NOT_FOUND
-    new_body = input("Enter new note body: ")
+    try:
+        new_body = input("Enter new note body: ")
+    except EOFError:
+        return "Note editing cancelled."
     notebook.edit_note(note_id, new_body)
     return "Note updated."
 
