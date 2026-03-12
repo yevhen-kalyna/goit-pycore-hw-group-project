@@ -1,3 +1,7 @@
+import signal
+import sys
+from types import FrameType
+
 from personal_assistant.handlers.contact_handlers import (
     add_address_handler,
     add_birthday_handler,
@@ -63,6 +67,17 @@ def _help_text() -> str:
 def main() -> None:
     """Головний цикл CLI-застосунку."""
     book, notebook = load_data()
+
+    def handle_exit_signal(signum: int, frame: FrameType | None) -> None:
+        _ = signum, frame
+        save_data(book, notebook)
+        print("\nGood bye!")
+        sys.exit(0)
+
+    signal.signal(signal.SIGINT, handle_exit_signal)
+    if hasattr(signal, "SIGTERM"):
+        signal.signal(signal.SIGTERM, handle_exit_signal)
+
     print("Welcome to the assistant bot!")
     print("Type 'help' to see available commands.")
 
