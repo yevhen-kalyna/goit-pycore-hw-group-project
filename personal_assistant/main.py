@@ -1,7 +1,3 @@
-import signal
-import sys
-from types import FrameType
-
 from personal_assistant.handlers.contact_handlers import (
     add_address_handler,
     add_birthday_handler,
@@ -83,107 +79,98 @@ def main() -> None:
     """Головний цикл CLI-застосунку."""
     book, notebook = load_data()
 
-    def handle_exit_signal(signum: int, frame: FrameType | None) -> None:
-        _ = signum, frame
-        save_data(book, notebook)
-        print("\nGood bye!")
-        sys.exit(0)
-
-    signal.signal(signal.SIGINT, handle_exit_signal)
-    if hasattr(signal, "SIGTERM"):
-        signal.signal(signal.SIGTERM, handle_exit_signal)
-
     print("Welcome to the assistant bot!")
     print("Type 'help' to see available commands.")
 
     while True:
         try:
             user_input = input("Enter a command: ").strip()
+
+            command, args = parse_input(user_input)
+
+            if not command:
+                continue
+
+            if command in {"close", "exit"}:
+                save_data(book, notebook)
+                print("Good bye!")
+                break
+
+            if command == "hello":
+                print("How can I help you?")
+                continue
+
+            if command == "help":
+                print(_help_text())
+                continue
+
+            result = "Invalid command."
+            should_save = False
+
+            if command == "add":
+                result = add_contact(args, book)
+                should_save = _is_successful_mutation(result)
+            elif command == "change":
+                result = change_contact(args, book)
+                should_save = _is_successful_mutation(result)
+            elif command == "phone":
+                result = show_phone(args, book)
+            elif command == "all":
+                result = show_all(book)
+            elif command == "delete-contact":
+                result = delete_contact(args, book)
+                should_save = _is_successful_mutation(result)
+            elif command == "add-birthday":
+                result = add_birthday_handler(args, book)
+                should_save = _is_successful_mutation(result)
+            elif command == "show-birthday":
+                result = show_birthday_handler(args, book)
+            elif command == "birthdays":
+                result = birthdays_handler(args, book)
+            elif command == "add-email":
+                result = add_email_handler(args, book)
+                should_save = _is_successful_mutation(result)
+            elif command == "add-address":
+                if len(args) >= 2:
+                    result = add_address_handler([args[0], " ".join(args[1:])], book)
+                else:
+                    result = add_address_handler(args, book)
+                should_save = _is_successful_mutation(result)
+            elif command == "search":
+                query_args = [" ".join(args)] if args else []
+                result = search_contact(query_args, book)
+            elif command == "add-note":
+                title_args = [" ".join(args)] if args else []
+                result = add_note_handler(title_args, notebook)
+                should_save = _is_successful_mutation(result)
+            elif command == "all-notes":
+                result = all_notes_handler(notebook)
+            elif command == "delete-note":
+                result = delete_note_handler(args, notebook)
+                should_save = _is_successful_mutation(result)
+            elif command == "edit-note":
+                result = edit_note_handler(args, notebook)
+                should_save = _is_successful_mutation(result)
+            elif command == "add-tag":
+                result = add_tag_handler(args, notebook)
+                should_save = _is_successful_mutation(result)
+            elif command == "find-note":
+                query_args = [" ".join(args)] if args else []
+                result = find_note_handler(query_args, notebook)
+            elif command == "find-by-tag":
+                result = find_by_tag_handler(args, notebook)
+            elif command in {"sort-notes", "sort-notes-by-tag"}:
+                result = sort_notes_by_tag_handler(notebook)
+
+            print(result)
+
+            if should_save:
+                save_data(book, notebook)
+
         except (KeyboardInterrupt, EOFError):
+            print("\nInterrupted. Saving data and exiting...")
             save_data(book, notebook)
-            print("\nGood bye!")
             break
-
-        command, args = parse_input(user_input)
-
-        if not command:
-            continue
-
-        if command in {"close", "exit"}:
-            save_data(book, notebook)
-            print("Good bye!")
-            break
-
-        if command == "hello":
-            print("How can I help you?")
-            continue
-
-        if command == "help":
-            print(_help_text())
-            continue
-
-        result = "Invalid command."
-        should_save = False
-
-        if command == "add":
-            result = add_contact(args, book)
-            should_save = _is_successful_mutation(result)
-        elif command == "change":
-            result = change_contact(args, book)
-            should_save = _is_successful_mutation(result)
-        elif command == "phone":
-            result = show_phone(args, book)
-        elif command == "all":
-            result = show_all(book)
-        elif command == "delete-contact":
-            result = delete_contact(args, book)
-            should_save = _is_successful_mutation(result)
-        elif command == "add-birthday":
-            result = add_birthday_handler(args, book)
-            should_save = _is_successful_mutation(result)
-        elif command == "show-birthday":
-            result = show_birthday_handler(args, book)
-        elif command == "birthdays":
-            result = birthdays_handler(args, book)
-        elif command == "add-email":
-            result = add_email_handler(args, book)
-            should_save = _is_successful_mutation(result)
-        elif command == "add-address":
-            if len(args) >= 2:
-                result = add_address_handler([args[0], " ".join(args[1:])], book)
-            else:
-                result = add_address_handler(args, book)
-            should_save = _is_successful_mutation(result)
-        elif command == "search":
-            query_args = [" ".join(args)] if args else []
-            result = search_contact(query_args, book)
-        elif command == "add-note":
-            title_args = [" ".join(args)] if args else []
-            result = add_note_handler(title_args, notebook)
-            should_save = _is_successful_mutation(result)
-        elif command == "all-notes":
-            result = all_notes_handler(notebook)
-        elif command == "delete-note":
-            result = delete_note_handler(args, notebook)
-            should_save = _is_successful_mutation(result)
-        elif command == "edit-note":
-            result = edit_note_handler(args, notebook)
-            should_save = _is_successful_mutation(result)
-        elif command == "add-tag":
-            result = add_tag_handler(args, notebook)
-            should_save = _is_successful_mutation(result)
-        elif command == "find-note":
-            query_args = [" ".join(args)] if args else []
-            result = find_note_handler(query_args, notebook)
-        elif command == "find-by-tag":
-            result = find_by_tag_handler(args, notebook)
-        elif command in {"sort-notes", "sort-notes-by-tag"}:
-            result = sort_notes_by_tag_handler(notebook)
-
-        print(result)
-
-        if should_save:
-            save_data(book, notebook)
 
 
 if __name__ == "__main__":
