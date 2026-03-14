@@ -92,7 +92,13 @@ def show_birthday_handler(args: list[str], book: AddressBook) -> str:
 @input_error
 def birthdays_handler(args: list[str], book: AddressBook) -> str:
     """Показує дні народження за найближчі N днів."""
-    days = int(args[0]) if args else 7
+    if args:
+        try:
+            days = int(args[0])
+        except ValueError:
+            raise ValueError("Days argument must be a number.")
+    else:
+        days = 7
     upcoming = book.get_upcoming_birthdays(days)
 
     if not upcoming:
@@ -136,6 +142,10 @@ def add_email_handler(args: list[str], book: AddressBook) -> str:
     if record is None:
         raise KeyError(name)
 
+    if record.email is not None:
+        old = str(record.email)
+        record.add_email(email)
+        return f"Email updated (was: {old})."
     record.add_email(email)
     return "Email added."
 
@@ -150,5 +160,9 @@ def add_address_handler(args: list[str], book: AddressBook) -> str:
     if record is None:
         raise KeyError(name)
 
+    if record.address is not None:
+        old = str(record.address)
+        record.add_address(address)
+        return f"Address updated (was: {old})."
     record.add_address(address)
     return "Address added."

@@ -1,3 +1,4 @@
+import shlex
 import signal
 from types import FrameType
 
@@ -28,7 +29,10 @@ from personal_assistant.storage import load_data, save_data
 
 
 def parse_input(user_input: str) -> tuple[str, list[str]]:
-    parts = user_input.strip().split()
+    try:
+        parts = shlex.split(user_input.strip())
+    except ValueError:
+        parts = user_input.strip().split()
     if not parts:
         return "", []
     return parts[0].lower(), parts[1:]
@@ -82,18 +86,23 @@ def _help_text() -> str:
 
 
 def _is_successful_mutation(result: str) -> bool:
-    return result in {
-        "Contact added.",
-        "Contact updated.",
-        "Contact deleted.",
-        "Birthday added.",
-        "Email added.",
-        "Address added.",
-        "Note added.",
-        "Note deleted.",
-        "Note updated.",
-        "Tag added.",
-    }
+    return (
+        result
+        in {
+            "Contact added.",
+            "Contact updated.",
+            "Contact deleted.",
+            "Birthday added.",
+            "Email added.",
+            "Address added.",
+            "Note added.",
+            "Note deleted.",
+            "Note updated.",
+            "Tag added.",
+        }
+        or result.startswith("Email updated")
+        or result.startswith("Address updated")
+    )
 
 
 def main() -> None:
