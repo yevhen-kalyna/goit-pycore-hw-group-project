@@ -142,6 +142,10 @@ def add_email_handler(args: list[str], book: AddressBook) -> str:
     if record is None:
         raise KeyError(name)
 
+    if record.email is not None:
+        old = str(record.email)
+        record.add_email(email)
+        return f"Email updated (was: {old})."
     record.add_email(email)
     return "Email added."
 
@@ -156,5 +160,9 @@ def add_address_handler(args: list[str], book: AddressBook) -> str:
     if record is None:
         raise KeyError(name)
 
+    if record.address is not None:
+        old = str(record.address)
+        record.add_address(address)
+        return f"Address updated (was: {old})."
     record.add_address(address)
     return "Address added."

@@ -93,7 +93,7 @@ def _is_successful_mutation(result: str) -> bool:
         "Note deleted.",
         "Note updated.",
         "Tag added.",
-    }
+    } or result.startswith("Email updated") or result.startswith("Address updated")
 
 
 def main() -> None:
