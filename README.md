@@ -1,6 +1,15 @@
 # Персональний помічник
 
-CLI-застосунок для керування контактами та нотатками (адресна книга + нотатки з тегами).
+CLI-застосунок для керування контактами та нотатками — адресна книга з телефонами, email, адресами, днями народження + нотатки з тегами.
+
+## Можливості
+
+- Керування контактами: додавання, редагування, пошук, видалення
+- Зберігання телефонів (з валідацією), email, адрес та днів народження
+- Нагадування про дні народження на найближчі N днів (з урахуванням вихідних)
+- Нотатки з тегами: створення, пошук, сортування за тегами
+- Автоматичне збереження даних у файл
+- Коректна обробка помилок введення
 
 ## Вимоги
 
@@ -61,6 +70,204 @@ assistant
 python -m personal_assistant.main
 ```
 
+При запуску бот привітає вас:
+
+```
+Welcome to the assistant bot!
+Type 'help' to see available commands.
+Enter a command:
+```
+
+## Команди CLI
+
+### Контакти
+
+| Команда | Аргументи | Опис |
+|---------|-----------|------|
+| `add` | `<name> <phone>` | Додати контакт або телефон до існуючого |
+| `change` | `<name> <old_phone> <new_phone>` | Змінити телефон контакту |
+| `phone` | `<name>` | Показати телефони контакту |
+| `all` | — | Показати всі контакти |
+| `search` | `<query>` | Пошук контактів за ім'ям, телефоном або email |
+| `delete-contact` | `<name>` | Видалити контакт |
+| `add-birthday` | `<name> <DD.MM.YYYY>` | Додати день народження |
+| `show-birthday` | `<name>` | Показати день народження контакту |
+| `birthdays` | `[days]` | Дні народження за N днів (за замовч. 7) |
+| `add-email` | `<name> <email>` | Додати email контакту |
+| `add-address` | `<name> <address>` | Додати адресу контакту |
+
+### Нотатки
+
+| Команда | Аргументи | Опис |
+|---------|-----------|------|
+| `add-note` | `<title>` | Додати нотатку (текст вводиться далі) |
+| `all-notes` | — | Показати всі нотатки |
+| `find-note` | `<query>` | Пошук нотаток за текстом у заголовку або тілі |
+| `edit-note` | `<note_id>` | Редагувати текст нотатки |
+| `delete-note` | `<note_id>` | Видалити нотатку |
+| `add-tag` | `<note_id> <tag>` | Додати тег до нотатки |
+| `find-by-tag` | `<tag>` | Пошук нотаток за тегом |
+| `sort-notes` | — | Сортувати нотатки за тегами |
+| `sort-notes-by-tag` | — | Те саме, що `sort-notes` |
+
+### Загальні
+
+| Команда | Опис |
+|---------|------|
+| `hello` | Привітання |
+| `help` | Список усіх доступних команд |
+| `close` / `exit` | Зберегти дані та вийти |
+
+## Приклади використання
+
+### Робота з контактами
+
+```
+Enter a command: add John 0501234567
+Contact added.
+
+Enter a command: add John 0509876543
+Contact updated.
+
+Enter a command: phone John
+0501234567; 0509876543
+
+Enter a command: change John 0501234567 0507777777
+Contact updated.
+
+Enter a command: add-email John john@example.com
+Email added.
+
+Enter a command: add-address John Kyiv, Khreshchatyk 1
+Address added.
+
+Enter a command: add-birthday John 15.06.1990
+Birthday added.
+
+Enter a command: show-birthday John
+15.06.1990
+
+Enter a command: all
+Name: John | Phones: 0507777777; 0509876543 | Birthday: 15.06.1990 | Email: john@example.com | Address: Kyiv, Khreshchatyk 1
+
+Enter a command: search John
+Name: John | Phones: 0507777777; 0509876543 | Birthday: 15.06.1990 | Email: john@example.com | Address: Kyiv, Khreshchatyk 1
+
+Enter a command: birthdays 30
+John: 15.06.1990
+
+Enter a command: delete-contact John
+Contact deleted.
+```
+
+### Робота з нотатками
+
+```
+Enter a command: add-note Список покупок
+Enter note body: Молоко, хліб, яйця
+Note added.
+
+Enter a command: add-note Ідеї для проєкту
+Enter note body: Написати CLI-бота для керування задачами
+Note added.
+
+Enter a command: all-notes
+ID: a1b2c3d4e5f6...
+[a1b2c3d4e5f6...] Список покупок: Молоко, хліб, яйця | tags: -
+ID: f6e5d4c3b2a1...
+[f6e5d4c3b2a1...] Ідеї для проєкту: Написати CLI-бота для керування задачами | tags: -
+
+Enter a command: add-tag a1b2c3d4e5f6 shopping
+Tag added.
+
+Enter a command: add-tag a1b2c3d4e5f6 grocery
+Tag added.
+
+Enter a command: find-note покупок
+[a1b2c3d4e5f6...] Список покупок: Молоко, хліб, яйця | tags: shopping, grocery
+
+Enter a command: find-by-tag shopping
+[a1b2c3d4e5f6...] Список покупок: Молоко, хліб, яйця | tags: shopping, grocery
+
+Enter a command: edit-note a1b2c3d4e5f6
+Enter new note body: Молоко, хліб, яйця, масло
+Note updated.
+
+Enter a command: sort-notes
+[a1b2c3d4e5f6...] Список покупок: Молоко, хліб, яйця, масло | tags: grocery, shopping
+[f6e5d4c3b2a1...] Ідеї для проєкту: Написати CLI-бота для керування задачами | tags: -
+
+Enter a command: delete-note f6e5d4c3b2a1
+Note deleted.
+
+Enter a command: close
+Good bye!
+```
+
+## Валідація даних
+
+| Поле | Формат | Приклад |
+|------|--------|---------|
+| Телефон | Рівно 10 цифр | `0501234567` |
+| Email | Стандартний формат email | `user@example.com` |
+| День народження | `DD.MM.YYYY` | `31.12.1999` |
+| Адреса | Довільний текст | `Kyiv, Khreshchatyk 1` |
+
+При некоректному введенні бот повідомить про помилку:
+
+```
+Enter a command: add John 12345
+Invalid phone number: must be 10 digits.
+
+Enter a command: add-email John not-an-email
+Invalid email format.
+
+Enter a command: add-birthday John 2000-01-01
+Invalid date format. Use DD.MM.YYYY
+```
+
+## Збереження даних
+
+Дані зберігаються автоматично у файл `assistant_data.pkl` у поточній директорії:
+
+- Після кожної успішної зміни (додавання, редагування, видалення)
+- При виході з програми (`close`, `exit`, Ctrl+C)
+- При отриманні сигналів завершення (SIGTERM, SIGHUP)
+
+При наступному запуску дані завантажуються автоматично. Якщо файл пошкоджений або відсутній — створюється порожня адресна книга та порожній блокнот.
+
+## Структура проєкту
+
+```
+goit-pycore-hw-group-project/
+├── personal_assistant/
+│   ├── __init__.py
+│   ├── main.py               # Точка входу, CLI-цикл, диспетчер команд
+│   ├── storage.py             # Серіалізація/десеріалізація даних
+│   ├── utils.py               # Декоратор обробки помилок
+│   ├── models/
+│   │   ├── __init__.py
+│   │   ├── fields.py          # Поля: Name, Phone, Email, Address, Birthday
+│   │   ├── record.py          # Запис контакту (Record)
+│   │   ├── address_book.py    # Адресна книга (AddressBook)
+│   │   ├── note.py            # Нотатка (Note)
+│   │   └── note_book.py       # Блокнот (NoteBook)
+│   └── handlers/
+│       ├── __init__.py
+│       ├── contact_handlers.py  # Обробники команд контактів
+│       └── note_handlers.py     # Обробники команд нотаток
+└── tests/
+    ├── conftest.py              # Auto-xfail хук для NotImplementedError
+    ├── test_fields.py
+    ├── test_record.py
+    ├── test_address_book.py
+    ├── test_e2e.py              # E2E-тести для CLI
+    ├── test_note.py
+    ├── test_note_book.py
+    ├── test_storage.py
+    └── test_handlers.py
+```
+
 ## Розробка
 
 Усі команди для розробки доступні через `make`:
@@ -87,21 +294,40 @@ pytest -v          # детальний вивід
 pytest --tb=short  # скорочений traceback
 ```
 
+### Як запустити тести для своєї задачі
+
+```bash
+# Тести для полів
+pytest tests/test_fields.py -v
+
+# Тести для Record
+pytest tests/test_record.py -v
+
+# Тести для AddressBook
+pytest tests/test_address_book.py -v
+
+# Тести для нотаток
+pytest tests/test_note.py tests/test_note_book.py -v
+
+# Тести для storage
+pytest tests/test_storage.py -v
+
+# Тести для handlers
+pytest tests/test_handlers.py -v
+
+# Усі тести
+pytest -v
+```
+
+### Auto-xfail для незреалізованих модулів
+
+`tests/conftest.py` містить pytest-хук, який автоматично позначає тести як **xfail** (expected failure), якщо вони потрапляють на `NotImplementedError` у заглушках. Це означає:
+
+- Реалізований код → тести показують `PASSED`
+- Заглушки → тести показують `XFAIL` (жовті), а не `FAILED` (червоні)
+- CI залишається зеленим, доки реалізований код працює коректно
+
 ## Робочий процес
-
-### 📋 Project Board
-
-Відстеження прогресу — на [Kanban-дошці проєкту](https://github.com/users/yevhen-kalyna/projects/5).
-
-| Колонка | Опис |
-|---------|------|
-| **Backlog** | Задача залежить від інших — ще не можна починати |
-| **Todo** | Готова до виконання — бери в роботу |
-| **In Progress** | Активно працюєш над задачею |
-| **In Review** | PR створений, чекає рев'ю |
-| **Done** | Замержено ✅ |
-
-> Детальніше про роботу з дошкою — див. [CONTRIBUTING.md](.github/CONTRIBUTING.md)
 
 ### Git-стратегія
 
@@ -134,8 +360,6 @@ git pull origin develop
 git checkout -b feature/<scope>
 ```
 
-Приклади: `feature/fields-and-record`, `feature/notes`, `feature/address-book-cli`
-
 3. Написати код, щоб тести проходили:
 
 ```bash
@@ -165,95 +389,8 @@ git push origin feature/<scope>
 - Коли тести зелені — натисніть **"Ready for review"** на GitHub
 - Заголовок PR — короткий опис змін
 - В описі PR вказати які Issues закриває (напр. `Closes #9, #10`)
-- PR має пройти CI (ruff + mypy + pytest)
-- PR потребує review від Lead
+- PR має пройти CI (lint + type-check + tests)
 - Використовується **Squash merge** — один чистий коміт на feature
-- Оновіть задачу на [дошці](https://github.com/users/yevhen-kalyna/projects/5): перетягніть в **In Review**
-
-### Як запустити тести для своєї задачі
-
-```bash
-# Тести для полів
-pytest tests/test_fields.py -v
-
-# Тести для Record
-pytest tests/test_record.py -v
-
-# Тести для AddressBook
-pytest tests/test_address_book.py -v
-
-# Тести для нотаток
-pytest tests/test_note.py tests/test_note_book.py -v
-
-# Тести для storage
-pytest tests/test_storage.py -v
-
-# Тести для handlers
-pytest tests/test_handlers.py -v
-
-# Усі тести
-pytest -v
-```
-
-## Команди CLI
-
-### Контакти
-
-| Команда | Аргументи | Опис |
-|---------|-----------|------|
-| `add` | name phone | Додати контакт або телефон |
-| `change` | name old_phone new_phone | Змінити телефон |
-| `phone` | name | Показати телефони контакту |
-| `all` | — | Показати всі контакти |
-| `search` | query | Пошук контактів за будь-яким полем |
-| `delete` | name | Видалити контакт |
-| `add-birthday` | name DD.MM.YYYY | Додати день народження |
-| `show-birthday` | name | Показати день народження |
-| `birthdays` | [days] | Дні народження за N днів (за замовч. 7) |
-| `add-email` | name email | Додати email |
-| `add-address` | name address | Додати адресу |
-
-### Нотатки
-
-| Команда | Аргументи | Опис |
-|---------|-----------|------|
-| `add-note` | title | Додати нотатку (текст вводиться далі) |
-| `find-note` | query | Пошук нотаток за текстом |
-| `edit-note` | id | Редагувати нотатку |
-| `delete-note` | id | Видалити нотатку |
-| `all-notes` | — | Показати всі нотатки |
-| `add-tag` | id tag | Додати тег до нотатки |
-| `find-by-tag` | tag | Пошук нотаток за тегом |
-| `sort-notes-by-tag` | — | Сортувати нотатки за тегами |
-
-### Загальні
-
-| Команда | Опис |
-|---------|------|
-| `hello` | Привітання |
-| `help` | Список команд |
-| `close` / `exit` | Вихід |
-
-## Структура проєкту
-
-```
-personal_assistant/
-├── __init__.py
-├── main.py
-├── storage.py
-├── utils.py
-├── models/
-│   ├── __init__.py
-│   ├── fields.py
-│   ├── record.py
-│   ├── address_book.py
-│   ├── note.py
-│   └── note_book.py
-└── handlers/
-    ├── __init__.py
-    ├── contact_handlers.py
-    └── note_handlers.py
-```
 
 ## Ліцензія
 
