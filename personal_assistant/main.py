@@ -86,18 +86,23 @@ def _help_text() -> str:
 
 
 def _is_successful_mutation(result: str) -> bool:
-    return result in {
-        "Contact added.",
-        "Contact updated.",
-        "Contact deleted.",
-        "Birthday added.",
-        "Email added.",
-        "Address added.",
-        "Note added.",
-        "Note deleted.",
-        "Note updated.",
-        "Tag added.",
-    } or result.startswith("Email updated") or result.startswith("Address updated")
+    return (
+        result
+        in {
+            "Contact added.",
+            "Contact updated.",
+            "Contact deleted.",
+            "Birthday added.",
+            "Email added.",
+            "Address added.",
+            "Note added.",
+            "Note deleted.",
+            "Note updated.",
+            "Tag added.",
+        }
+        or result.startswith("Email updated")
+        or result.startswith("Address updated")
+    )
 
 
 def main() -> None:
