@@ -12,7 +12,10 @@ class Record:
         self.address: Address | None = None
 
     def add_phone(self, phone: str) -> None:
-        self.phones.append(Phone(phone))
+        new_phone = Phone(phone)
+        if self.find_phone(new_phone.value) is not None:
+            raise ValueError(f"Phone {phone} already exists.")
+        self.phones.append(new_phone)
 
     def remove_phone(self, phone: str) -> None:
         target = self.find_phone(phone)
