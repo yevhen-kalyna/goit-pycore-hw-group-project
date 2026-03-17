@@ -466,3 +466,22 @@ class TestEdgeCases:
     def test_add_address_contact_not_found(self, cli_dir: Path) -> None:
         result = run_cli(["add-address Ghost 123 Main St", "close"], cli_dir)
         assert "Contact not found." in result.stdout
+
+
+# ==================== K. parse_input quoting ====================
+
+
+class TestParseInputQuoting:
+    def test_quoted_name_is_parsed_as_single_argument(self, cli_dir: Path) -> None:
+        """add "Alice Bob" 1234567890 should create a contact named "Alice Bob"."""
+        result = run_cli(['add "Alice Bob" 1234567890', 'phone "Alice Bob"', "close"], cli_dir)
+        assert "Contact added." in result.stdout
+        assert "1234567890" in result.stdout
+
+    def test_unmatched_quote_shows_user_friendly_error(self, cli_dir: Path) -> None:
+        """Unmatched quote must not mutate data and must show a clear error."""
+        result = run_cli(['add "Alice Bob 1234567890', "close"], cli_dir)
+        assert "Invalid input: unmatched quote." in result.stdout
+        # No contact should have been created
+        r2 = run_cli(["all", "close"], cli_dir)
+        assert "No contacts saved." in r2.stdout

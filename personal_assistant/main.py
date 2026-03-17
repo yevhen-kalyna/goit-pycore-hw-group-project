@@ -32,7 +32,7 @@ def parse_input(user_input: str) -> tuple[str, list[str]]:
     try:
         parts = shlex.split(user_input.strip())
     except ValueError:
-        parts = user_input.strip().split()
+        return "invalid-quoted-input", []
     if not parts:
         return "", []
     return parts[0].lower(), parts[1:]
@@ -127,6 +127,10 @@ def main() -> None:
             command, args = parse_input(user_input)
 
             if not command:
+                continue
+
+            if command == "invalid-quoted-input":
+                print("Invalid input: unmatched quote.")
                 continue
 
             if command in {"close", "exit"}:
