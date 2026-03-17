@@ -60,6 +60,13 @@ def test_add_phone_invalid_raises_value_error() -> None:
         record.add_phone("invalid")
 
 
+def test_add_phone_duplicate_raises_value_error() -> None:
+    record = Record("Alice")
+    record.add_phone("1234567890")
+    with pytest.raises(ValueError, match="already exists"):
+        record.add_phone("1234567890")
+
+
 # --- remove_phone ---
 
 
