@@ -1,4 +1,7 @@
+from datetime import date
+
 from personal_assistant.models.address_book import AddressBook
+from personal_assistant.models.fields import Birthday
 from personal_assistant.models.record import Record
 from personal_assistant.utils import input_error
 
@@ -69,6 +72,10 @@ def add_birthday_handler(args: list[str], book: AddressBook) -> str:
     record = book.find(name)
     if record is None:
         raise KeyError(name)
+
+    parsed = Birthday(birthday).value  # raises ValueError if format is wrong
+    if parsed >= date.today():
+        raise ValueError("Birthday must be a date in the past.")
 
     record.add_birthday(birthday)
     return "Birthday added."

@@ -48,8 +48,6 @@ class Birthday(Field):
             parsed = datetime.strptime(value, "%d.%m.%Y").date()
         except ValueError:
             raise ValueError(f"Birthday must be in DD.MM.YYYY format, got: '{value}'")
-        if parsed >= date.today():
-            raise ValueError("Birthday must be a date in the past.")
         self.value = parsed
 
     def __str__(self) -> str:
