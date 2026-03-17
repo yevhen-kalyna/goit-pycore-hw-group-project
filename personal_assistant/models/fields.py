@@ -49,7 +49,7 @@ class Birthday(Field):
         except ValueError:
             raise ValueError(f"Birthday must be in DD.MM.YYYY format, got: '{value}'")
         if parsed.year > date.today().year:
-            raise ValueError("Birthday must be a date in the past.")
+            raise ValueError(f"Birthday year cannot be in the future, got: '{value}'")
         self.value = parsed
 
     def __str__(self) -> str:
