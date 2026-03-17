@@ -481,7 +481,7 @@ class TestParseInputQuoting:
     def test_unmatched_quote_shows_user_friendly_error(self, cli_dir: Path) -> None:
         """Unmatched quote must not mutate data and must show a clear error."""
         result = run_cli(['add "Alice Bob 1234567890', "close"], cli_dir)
-        assert "Invalid input: unmatched quote." in result.stdout
+        assert "Invalid input: malformed quoting or escaping." in result.stdout
         # No contact should have been created
         r2 = run_cli(["all", "close"], cli_dir)
         assert "No contacts saved." in r2.stdout

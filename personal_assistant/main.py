@@ -130,7 +130,7 @@ def main() -> None:
                 continue
 
             if command == "invalid-quoted-input":
-                print("Invalid input: unmatched quote.")
+                print("Invalid input: malformed quoting or escaping.")
                 continue
 
             if command in {"close", "exit"}:
