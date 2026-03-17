@@ -27,6 +27,8 @@ class Record:
         target = self.find_phone(old_phone)
         if target is None:
             raise ValueError(f"Phone {old_phone} not found.")
+        if old_phone != new_phone and self.find_phone(new_phone) is not None:
+            raise ValueError(f"Phone {new_phone} already exists.")
         index = self.phones.index(target)
         self.phones[index] = Phone(new_phone)
 
