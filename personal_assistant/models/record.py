@@ -12,7 +12,10 @@ class Record:
         self.address: Address | None = None
 
     def add_phone(self, phone: str) -> None:
-        self.phones.append(Phone(phone))
+        new_phone = Phone(phone)
+        if self.find_phone(new_phone.value) is not None:
+            raise ValueError(f"Phone {phone} already exists.")
+        self.phones.append(new_phone)
 
     def remove_phone(self, phone: str) -> None:
         target = self.find_phone(phone)
@@ -24,6 +27,8 @@ class Record:
         target = self.find_phone(old_phone)
         if target is None:
             raise ValueError(f"Phone {old_phone} not found.")
+        if old_phone != new_phone and self.find_phone(new_phone) is not None:
+            raise ValueError(f"Phone {new_phone} already exists.")
         index = self.phones.index(target)
         self.phones[index] = Phone(new_phone)
 

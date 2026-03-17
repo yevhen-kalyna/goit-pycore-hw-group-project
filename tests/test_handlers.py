@@ -197,6 +197,15 @@ def test_add_email_handler_success(book_with_contact: AddressBook) -> None:
     assert result == "Email added."
 
 
+def test_add_email_handler_update_existing(book_with_contact: AddressBook) -> None:
+    add_email_handler(["Alice", "alice@example.com"], book_with_contact)
+    result = add_email_handler(["Alice", "new@example.com"], book_with_contact)
+    assert result == "Email updated (was: alice@example.com)."
+    record = book_with_contact.find("Alice")
+    assert record is not None
+    assert str(record.email) == "new@example.com"
+
+
 def test_add_email_handler_contact_not_found(book: AddressBook) -> None:
     result = add_email_handler(["NonExistent", "test@example.com"], book)
     assert result == "Contact not found."
